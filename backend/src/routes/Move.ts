@@ -14,6 +14,7 @@ import {
   deleteMove,
   getMoveById
 } from "../services/moveService";
+import { isUndefined } from "util";
 
 // Init shared
 const router = Router();
@@ -31,10 +32,18 @@ const router = Router();
  *       - application/json
  */
 router.get("/", regularAuth, async (req: Request, res: Response) => {
-  try {
-    const { userId } = res.locals;
+  const { userId } = res.locals;
 
+  try {
     const moves = await getMovesByUserId(userId);
+
+    if (isUndefined(moves)) {
+      return res
+        .status(NO_CONTENT)
+        .json({})
+        .end();
+    }
+
     return res
       .status(OK)
       .json(moves)
