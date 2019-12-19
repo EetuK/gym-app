@@ -1,0 +1,14 @@
+#! dockerfile
+FROM node:alpine
+
+WORKDIR opt/app
+
+COPY ./backend /opt/app
+
+RUN  npm install
+
+RUN npm install -g nodemon
+
+EXPOSE 9000
+
+CMD ["npm", "run", "dev"]
