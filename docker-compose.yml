@@ -26,10 +26,13 @@ services:
     #   Set a volume some that database is not lost after shutting down the container.
     #   I used the name postgres-data but you can changed it to something else.
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
   mywebsql:
     image: quantumobject/docker-mywebsql
     ports:
       - "9001:80"
     restart: always
+volumes:
+  pgdata:
+    external: true

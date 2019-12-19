@@ -2,6 +2,7 @@ import { INewMove, IMove } from "../types/interfaces";
 import { db } from "../shared/db";
 import snakeCaseKeys from "snakecase-keys";
 import camelCaseKeys from "camelcase-keys";
+import { QueryResult } from "pg";
 
 export const createMove = async (
   move: INewMove
@@ -26,6 +27,24 @@ export const createMove = async (
   return ret as IMove;
 };
 
+export const getMoveById = (
+  userId: number,
+  moveId: number
+): Promise<undefined> => {
+  return new Promise(async (resolve, reject) => {
+    const result = await db.query(
+      `SELECT * FROM move WHERE id = $1 AND user_id = $2;`,
+      [moveId, userId]
+    );
+
+    if (result.rowCount === 0) {
+      reject(new Error("No Moves found"));
+    }
+
+    resolve(result.rows[0]);
+  });
+};
+
 export const getMovesByUserId = async (
   userId: number
 ): Promise<IMove[] | undefined> => {
@@ -36,11 +55,23 @@ export const getMovesByUserId = async (
     [userId]
   );
 
-  if (result.rows.length === 0) {
+  if (result.rowCount === 0) {
     return undefined;
   }
 
   const ret = camelCaseKeys(result.rows) as unknown;
 
   return ret as IMove[];
+};
+
+export const deleteMove = (moveId: number): Promise<undefined> => {
+  return new Promise(async (resolve, reject) => {
+    const result = await db.query(`DELETE FROM move WHERE id = $1;`, [moveId]);
+
+    if (result.rowCount === 0) {
+      reject(new Error("Invalid Move ID"));
+    }
+
+    resolve();
+  });
 };

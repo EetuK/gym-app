@@ -15,7 +15,11 @@ const options = {
     }
   },
   // Path to the API docs
-  apis: ["./src/routes/Auth.ts", "./src/routes/index.ts"]
+  apis: [
+    "./src/routes/Auth.ts",
+    "./src/routes/index.ts",
+    "./src/routes/Move.ts"
+  ]
 };
 const swaggerSpec = swaggerJSDoc(options);
 

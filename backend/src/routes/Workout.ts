@@ -9,8 +9,18 @@ const router = Router();
 /******************************************************************************
  *                      Get All user workouts - "GET /api/workout"
  ******************************************************************************/
-
-router.get("/", regularAuth, async (req: Request, res: Response) => {});
+/** @swagger
+ *
+ * /api/workout:
+ *   get:
+ *     tags: [Move]
+ *     description: Get all user workouts
+ *     produces:
+ *       - application/json
+ */
+router.get("/", regularAuth, async (req: Request, res: Response) => {
+  const { userId } = res.locals;
+});
 
 /******************************************************************************
  *                       Add One - "POST /api/users/add"
