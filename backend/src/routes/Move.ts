@@ -4,8 +4,7 @@ import { logger, adminAuth, regularAuth } from "../shared";
 import {
   validate,
   requiredNameValidator,
-  requiredInfoValidator,
-  requiredMoveIdValidator
+  requiredInfoValidator
 } from "../services/validate";
 import { getUserByEmail } from "../services/userService";
 import {

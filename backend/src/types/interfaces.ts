@@ -31,16 +31,27 @@ export interface INewWorkout {
   info: string;
 }
 
-export interface INewMove {
-  userId: number;
-  name: string;
-  info: string;
-}
-
 export interface IMove {
   id: number;
   userId: number;
   name: string;
   info: string;
   createdAt: string;
+}
+
+export interface INewMove {
+  userId: number;
+  name: string;
+  info: string;
+}
+
+export interface IWorkoutMove {
+  workoutId: number;
+  moveId: number;
+  addedAt: string;
+}
+
+export interface INewWorkoutMove {
+  workoutId: number;
+  moveId: number;
 }

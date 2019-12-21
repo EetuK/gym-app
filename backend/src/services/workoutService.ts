@@ -60,7 +60,7 @@ export const createWorkout = async (
 
 export const deleteWorkout = (workoutId: number): Promise<undefined> => {
   return new Promise(async (resolve, reject) => {
-    const result = await db.query(`DELETE FROM move WHERE id = $1;`, [
+    const result = await db.query(`DELETE FROM workout WHERE id = $1;`, [
       workoutId
     ]);
 
