@@ -3,6 +3,7 @@ import UserRouter from "./Users";
 import AuthRouter from "./Auth";
 import WorkoutRouter from "./Workout";
 import MoveRouter from "./Move";
+import WorkoutMoveRouter from "./WorkoutMove";
 import { OK } from "http-status-codes";
 
 // Init router and path
@@ -31,6 +32,14 @@ router.use("/move", MoveRouter);
  *   description: Creating and getting workouts
  */
 router.use("/workout", WorkoutRouter);
+
+/**
+ * @swagger
+ * tags:
+ *   name: WorkoutMove
+ *   description: Creating and getting WorkoutMoves
+ */
+router.use("/workoutmove", WorkoutMoveRouter);
 
 router.use("/users", UserRouter);
 

@@ -6,7 +6,6 @@ import {
   requiredNameValidator,
   requiredInfoValidator
 } from "../services/validate";
-import { getUserByEmail } from "../services/userService";
 import {
   createMove,
   getMovesByUserId,

@@ -19,7 +19,8 @@ const options = {
     "./src/routes/Auth.ts",
     "./src/routes/index.ts",
     "./src/routes/Move.ts",
-    "./src/routes/Workout.ts"
+    "./src/routes/Workout.ts",
+    "./src/routes/WorkoutMove.ts"
   ]
 };
 const swaggerSpec = swaggerJSDoc(options);
