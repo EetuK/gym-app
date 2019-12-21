@@ -29,7 +29,3 @@ export const requiredNameValidator = {
 export const requiredInfoValidator = {
   info: Joi.string().required()
 };
-
-export const requiredMoveIdValidator = {
-  id: Joi.number().required()
-};

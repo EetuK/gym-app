@@ -53,7 +53,7 @@ export const createMove = async (
     [userId, name, info]
   );
 
-  if (result.rows.length === 0) {
+  if (result.rowCount === 0) {
     return undefined;
   }
 

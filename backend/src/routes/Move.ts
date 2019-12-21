@@ -148,11 +148,11 @@ router.post("/", regularAuth, async (req: Request, res: Response) => {
 });
 
 /******************************************************************************
- *                       Delete One - "DELETE /api/move"
+ *                       Delete One - "DELETE /api/move/{id}"
  ******************************************************************************/
 /** @swagger
  *
- * /api/move:
+ * /api/move/{id}:
  *   delete:
  *     tags: [Move]
  *     description: Delete a move
@@ -160,27 +160,16 @@ router.post("/", regularAuth, async (req: Request, res: Response) => {
  *       - application/json
  *     parameters:
  *       - id: id
+ *         in: path
  *         description: ID of the move
  *         required: true
  *         type: string
  */
-router.delete("/", regularAuth, async (req: Request, res: Response) => {
+router.delete("/:id", regularAuth, async (req: Request, res: Response) => {
+  const { id } = req.params;
+
   try {
-    const { value: move, error } = validate(
-      {
-        ...requiredMoveIdValidator
-      },
-      req.body
-    );
-
-    if (error) {
-      return res.status(BAD_REQUEST).json({
-        error: error.message
-      });
-    }
-
-    const { id } = move;
-    await deleteMove(id);
+    await deleteMove((id as unknown) as number);
 
     return res.status(NO_CONTENT).end();
   } catch (err) {

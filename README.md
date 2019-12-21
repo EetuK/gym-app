@@ -10,8 +10,8 @@
 ## Todo
 
 - [x] auth
-- [ ] workout
-- [ ] move
+- [x] workout
+- [x] move
 - [ ] workout_moves
 - [ ] workout_executions
 - [ ] move_executions

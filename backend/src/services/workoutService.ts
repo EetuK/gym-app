@@ -1,5 +1,5 @@
 import { db } from "../shared/db";
-import { INewWorkout, IWorkout } from "../types/interfaces";
+import { INewWorkout, IWorkout, INewMove } from "../types/interfaces";
 import camelcaseKeys = require("camelcase-keys");
 
 export const getWorkoutsByUserId = async (
@@ -36,14 +36,38 @@ export const getWorkoutById = async (
   return ret as IWorkout;
 };
 
-export const addWorkout = async (workout: INewWorkout) => {
-  const { userId, name, info } = workout;
+export const createWorkout = async (
+  move: INewWorkout
+): Promise<IWorkout | undefined> => {
+  const { userId, name, info } = move;
 
-  return db.query(
+  const result = await db.query(
     `
-    INSERT INTO workout (userId, name, info, created_at)
-    VALUES ($1, $2, $3, NOW());
+    INSERT INTO workout (user_id, name, info, created_at)
+    VALUES ($1, $2, $3, NOW()) RETURNING *;
   `,
     [userId, name, info]
   );
+
+  if (result.rowCount === 0) {
+    return undefined;
+  }
+
+  const ret = camelcaseKeys(result.rows)[0] as unknown;
+
+  return ret as IWorkout;
+};
+
+export const deleteWorkout = (workoutId: number): Promise<undefined> => {
+  return new Promise(async (resolve, reject) => {
+    const result = await db.query(`DELETE FROM move WHERE id = $1;`, [
+      workoutId
+    ]);
+
+    if (result.rowCount === 0) {
+      reject(new Error("Invalid Workout ID"));
+    }
+
+    resolve();
+  });
 };
