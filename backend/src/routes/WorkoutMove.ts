@@ -84,6 +84,8 @@ router.post("/", regularAuth, async (req: Request, res: Response) => {
       req.body
     );
 
+    console.log(req.body);
+
     if (error) {
       return res.status(BAD_REQUEST).json({
         error: error.message
@@ -119,15 +121,20 @@ router.post("/", regularAuth, async (req: Request, res: Response) => {
  *     parameters:
  *       - id: id
  *         in: path
- *         description: ID of the WorkoutMove
+ *         description: ID of the Workout
  *         required: true
- *         type: string
+ *         type: number
+ *       - name: moveId
+ *         description: ID of the Move
+ *         required: true
+ *         type: number
  */
 router.delete("/:id", regularAuth, async (req: Request, res: Response) => {
   const { id } = req.params;
+  const { moveId } = req.body;
 
   try {
-    await deleteWorkoutMove((id as unknown) as number);
+    await deleteWorkoutMove((id as unknown) as number, moveId);
 
     return res.status(NO_CONTENT).end();
   } catch (err) {

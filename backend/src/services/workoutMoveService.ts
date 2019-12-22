@@ -39,12 +39,14 @@ export const createWorkoutMove = async (
 };
 
 export const deleteWorkoutMove = (
-  workoutMoveId: number
+  workoutId: number,
+  moveId: number
 ): Promise<undefined> => {
   return new Promise(async (resolve, reject) => {
-    const result = await db.query(`DELTE FROM workout_moves WHERE id = $1;`, [
-      workoutMoveId
-    ]);
+    const result = await db.query(
+      `DELTE FROM workout_moves WHERE workout_id = $1 AND move_id = $2;`,
+      [workoutId, moveId]
+    );
 
     if (result.rowCount === 0) {
       reject(new Error("Invalid WorkoutMove ID"));
