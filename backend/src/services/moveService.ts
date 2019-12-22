@@ -21,22 +21,23 @@ export const getMovesByUserId = async (
   return ret as IMove[];
 };
 
-export const getMoveById = (
+export const getMoveById = async (
   userId: number,
   moveId: number
-): Promise<undefined> => {
-  return new Promise(async (resolve, reject) => {
-    const result = await db.query(
-      `SELECT * FROM move WHERE id = $1 AND user_id = $2;`,
-      [moveId, userId]
-    );
+): Promise<IMove | undefined> => {
+  const result = await db.query(
+    `SELECT * FROM move WHERE id = $1 AND user_id = $2;`,
+    [moveId, userId]
+  );
 
-    if (result.rowCount === 0) {
-      reject(new Error("No Moves found"));
-    }
+  if (result.rowCount === 0) {
+    //reject(new Error("No Moves found"));
+    return undefined;
+  }
 
-    resolve(result.rows[0]);
-  });
+  const ret = camelCaseKeys(result.rows[0]) as unknown;
+
+  return ret as IMove;
 };
 
 export const createMove = async (

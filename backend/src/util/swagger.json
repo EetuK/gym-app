@@ -1,1 +1,228 @@
-{}
+{
+  "openapi": "3.0.0",
+  "info": { "title": "Kuntosali-app", "version": "1.0.0" },
+  "paths": {
+    "/register": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "Register to the application",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "firstname",
+            "description": "Username to use for login.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "lastname",
+            "description": "Username to use for login.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "description": "Username to use for login.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "description": "Username to use for login.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": { "200": { "description": "login" } }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "Login to the application",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "username",
+            "description": "Username to use for login.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "description": "User's password.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": { "200": { "description": "login" } }
+      }
+    },
+    "/api/move": {
+      "get": {
+        "tags": ["Move"],
+        "description": "Get all user moves",
+        "produces": ["application/json"]
+      },
+      "post": {
+        "tags": ["Move"],
+        "description": "Create new move",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "name",
+            "description": "Name of the move",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "info",
+            "description": "More info of the move",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "/api/move/{id}": {
+      "get": {
+        "tags": ["Move"],
+        "description": "Get one Move",
+        "produces": ["application/json"],
+        "parameters": [{ "name": "id", "in": "path" }],
+        "responses": { "200": { "description": "Success" } }
+      },
+      "delete": {
+        "tags": ["Move"],
+        "description": "Delete a move",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "id": "id",
+            "in": "path",
+            "description": "ID of the move",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "/api/workout": {
+      "get": {
+        "tags": ["Workout"],
+        "description": "Get all user workouts",
+        "produces": ["application/json"]
+      },
+      "post": {
+        "tags": ["Workout"],
+        "description": "Create new workout",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "name",
+            "description": "Name of the workout",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "info",
+            "description": "More info of the workout",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "moves",
+            "description": "Ids of the moves that are in the workout",
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        ]
+      }
+    },
+    "/api/workout/{id}": {
+      "get": {
+        "tags": ["Workout"],
+        "description": "Get one Workout",
+        "produces": ["application/json"],
+        "parameters": [{ "name": "workout", "in": "path" }],
+        "responses": { "200": { "description": "Success" } }
+      },
+      "delete": {
+        "tags": ["Workout"],
+        "description": "Delete a Workout",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "id": "id",
+            "in": "path",
+            "description": "ID of the Workout",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "/api/workoutmove/{id}": {
+      "get": {
+        "tags": ["WorkoutMove"],
+        "description": "Get all moves of a workout",
+        "produces": ["application/json"]
+      },
+      "delete": {
+        "tags": ["WorkoutMove"],
+        "description": "Delete a WorkoutMove",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "id": "id",
+            "in": "path",
+            "description": "ID of the Workout",
+            "required": true,
+            "type": "number"
+          },
+          {
+            "name": "moveId",
+            "description": "ID of the Move",
+            "required": true,
+            "type": "number"
+          }
+        ]
+      }
+    },
+    "/api/WorkoutMove": {
+      "post": {
+        "tags": ["WorkoutMove"],
+        "description": "Create a new WorkoutMove",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "workoutId",
+            "description": "ID of the Workout",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "moveId",
+            "description": "ID of the Move",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    }
+  },
+  "components": {},
+  "tags": [
+    { "name": "Auth", "description": "Login and register" },
+    { "name": "Move", "description": "Creating and getting moves" },
+    { "name": "Workout", "description": "Creating and getting workouts" },
+    {
+      "name": "WorkoutMove",
+      "description": "Creating and getting WorkoutMoves"
+    },
+    {
+      "name": "Execution",
+      "description": "Creating and getting Workout executions and Move executions"
+    }
+  ]
+}

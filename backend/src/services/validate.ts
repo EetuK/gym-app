@@ -29,10 +29,47 @@ export const requiredInfoValidator = {
   info: Joi.string().required()
 };
 
+export const optionalInfoValidator = {
+  info: Joi.string().optional()
+};
+
 export const requiredMoveIdValidator = {
   moveId: Joi.number().required()
 };
 
 export const requiredWorkoutIdValidator = {
   workoutId: Joi.number().required()
+};
+
+export const requiredMoveIdArrayValidator = {
+  moves: Joi.array()
+    .items(Joi.string())
+    .required()
+};
+
+export const requiredWorkoutExecutionIdValidator = {
+  workoutExecutionId: Joi.string().required()
+};
+
+export const requiredSetsValidator = {
+  sets: Joi.number().required()
+};
+
+export const requiredRepsValidator = {
+  reps: Joi.number().required()
+};
+
+export const requiredWeightValidator = {
+  weight: Joi.number().required()
+};
+
+export const requiredVibeValidator = {
+  vibe: Joi.number()
+    .min(1)
+    .max(5)
+    .required()
+};
+
+export const requiredRestingTimeValidator = {
+  restingTime: Joi.number().required()
 };

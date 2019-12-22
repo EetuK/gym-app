@@ -1,47 +1,65 @@
 import { db } from "../shared/db";
-import { INewWorkout, IWorkout, INewMove } from "../types/interfaces";
+import { INewWorkout, IWorkout, INewMove, IMove } from "../types/interfaces";
 import camelcaseKeys = require("camelcase-keys");
 
 export const getWorkoutsByUserId = async (
   userId: number
 ): Promise<IWorkout[] | undefined> => {
-  const result = await db.query(`SELECT * FROM workout WHERE user_id = $1;`, [
-    userId
-  ]);
+  const workoutResult = await db.query(
+    `SELECT * FROM workout WHERE user_id = $1;`,
+    [userId]
+  );
 
-  if (result.rowCount === 0) {
+  if (workoutResult.rowCount === 0) {
     return undefined;
   }
 
-  const ret = camelcaseKeys(result.rows) as unknown;
+  const workouts = (camelcaseKeys(workoutResult.rows) as unknown) as IWorkout[];
 
-  return ret as IWorkout[];
+  return workouts;
 };
 
 export const getWorkoutById = async (
   userId: number,
   workoutId: number
 ): Promise<IWorkout | undefined> => {
-  const result = await db.query(
+  const workoutResult = await db.query(
     `SELECT * FROM workout WHERE id = $1 AND user_id = $2;`,
-    [userId, workoutId]
+    [workoutId, userId]
   );
 
-  if (result.rowCount === 0) {
+  if (workoutResult.rowCount === 0) {
     return undefined;
   }
 
-  const ret = camelcaseKeys(result.rows[0]) as unknown;
+  let workout = (camelcaseKeys(workoutResult.rows[0]) as unknown) as IWorkout;
 
-  return ret as IWorkout;
+  console.log(workout);
+
+  const moveResult = await db.query(
+    `
+  SELECT workout_moves.workout_id, move.* FROM workout_moves
+    LEFT JOIN move ON move.id = workout_moves.move_id
+  WHERE workout_moves.workout_id = $1`,
+    [workoutId]
+  );
+
+  console.log(moveResult);
+
+  const moves = (camelcaseKeys(moveResult.rows) as unknown) as IMove[];
+
+  console.log(moves);
+
+  workout.moves = moves;
+  return workout;
 };
 
 export const createWorkout = async (
   move: INewWorkout
 ): Promise<IWorkout | undefined> => {
-  const { userId, name, info } = move;
+  const { userId, name, info, moves } = move;
 
-  const result = await db.query(
+  const resultWorkout = await db.query(
     `
     INSERT INTO workout (user_id, name, info, created_at)
     VALUES ($1, $2, $3, NOW()) RETURNING *;
@@ -49,25 +67,45 @@ export const createWorkout = async (
     [userId, name, info]
   );
 
-  if (result.rowCount === 0) {
-    return undefined;
-  }
+  let workout = (camelcaseKeys(resultWorkout.rows)[0] as unknown) as IWorkout;
 
-  const ret = camelcaseKeys(result.rows)[0] as unknown;
+  const moveInsertQuery = `
+    INSERT INTO workout_moves (workout_id, move_id, added_at) 
+    VALUES ${moves
+      .map(move => `(${workout.id}, ${String(move)}, NOW())`)
+      .join(",")};`;
 
-  return ret as IWorkout;
+  const resultInsertMoves = await db.query(moveInsertQuery);
+
+  const resultMoves = await db.query(
+    `
+  SELECT workout_moves.workout_id, move.* FROM workout_moves
+    LEFT JOIN move ON move.id = workout_moves.move_id
+  WHERE workout_moves.workout_id = $1`,
+    [workout.id]
+  );
+
+  workout.moves = (camelcaseKeys(resultMoves.rows) as unknown) as IMove[];
+
+  return workout as IWorkout;
 };
 
-export const deleteWorkout = (workoutId: number): Promise<undefined> => {
-  return new Promise(async (resolve, reject) => {
-    const result = await db.query(`DELETE FROM workout WHERE id = $1;`, [
-      workoutId
-    ]);
+export const deleteWorkout = async (workoutId: number): Promise<void> => {
+  let result = await db.query(
+    `
+      DELETE FROM workout_moves WHERE workout_id = $1;
+      `,
+    [workoutId]
+  );
 
-    if (result.rowCount === 0) {
-      reject(new Error("Invalid Workout ID"));
-    }
+  result = await db.query(
+    `
+    DELETE FROM workout WHERE id = $1;
+    `,
+    [workoutId]
+  );
 
-    resolve();
-  });
+  if (result.rowCount === 0) {
+    throw new Error("Invalid Workout ID");
+  }
 };

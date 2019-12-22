@@ -84,8 +84,6 @@ router.post("/", regularAuth, async (req: Request, res: Response) => {
       req.body
     );
 
-    console.log(req.body);
-
     if (error) {
       return res.status(BAD_REQUEST).json({
         error: error.message

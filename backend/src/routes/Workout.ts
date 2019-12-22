@@ -4,7 +4,8 @@ import { logger, adminAuth, regularAuth } from "../shared";
 import {
   validate,
   requiredNameValidator,
-  requiredInfoValidator
+  requiredInfoValidator,
+  requiredMoveIdArrayValidator
 } from "src/services/validate";
 import {
   getWorkoutsByUserId,
@@ -77,8 +78,12 @@ router.get("/:id", regularAuth, async (req: Request, res: Response) => {
   const { userId } = res.locals;
   const { id } = req.params;
 
+  console.log(userId, id);
+
   try {
     const workout = await getWorkoutById(userId, (id as unknown) as number);
+
+    console.log(workout);
 
     if (isUndefined(workout)) {
       return res
@@ -100,7 +105,7 @@ router.get("/:id", regularAuth, async (req: Request, res: Response) => {
 });
 
 /******************************************************************************
- *                       Add One - "POST /api/users/add"
+ *                       Add One - "POST /api/workout"
  ******************************************************************************/
 /** @swagger
  *
@@ -119,6 +124,11 @@ router.get("/:id", regularAuth, async (req: Request, res: Response) => {
  *         description: More info of the workout
  *         required: true
  *         type: string
+ *       - name: moves
+ *         description: Ids of the moves that are in the workout
+ *         type: array
+ *         items:
+ *            type: string
  */
 router.post("/", regularAuth, async (req: Request, res: Response) => {
   const { userId } = res.locals;
@@ -127,7 +137,8 @@ router.post("/", regularAuth, async (req: Request, res: Response) => {
     const { value: move, error } = validate(
       {
         ...requiredNameValidator,
-        ...requiredInfoValidator
+        ...requiredInfoValidator,
+        ...requiredMoveIdArrayValidator
       },
       req.body
     );
@@ -138,8 +149,8 @@ router.post("/", regularAuth, async (req: Request, res: Response) => {
       });
     }
 
-    const { name, info } = move;
-    const result = await createWorkout({ userId, name, info });
+    const { name, info, moves } = move;
+    const result = await createWorkout({ userId, name, info, moves });
 
     return res
       .status(CREATED)

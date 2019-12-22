@@ -12,6 +12,7 @@
 - [x] auth
 - [x] workout
 - [x] move
-- [ ] workout_moves
+- [x] workout_moves
 - [ ] workout_executions
 - [ ] move_executions
+- [ ] workout UPDATE

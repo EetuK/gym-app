@@ -3,3 +3,5 @@ export enum Role {
   Admin = "admin",
   Regular = "regular"
 }
+
+export type Vibe = 1 | 2 | 3 | 4 | 5;
