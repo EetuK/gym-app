@@ -1,5 +1,4 @@
 import Joi from "@hapi/joi";
-import { JSONCookies } from "cookie-parser";
 
 export const validate = (schema: object, value: any) =>
   Joi.object(schema).validate(value);
@@ -28,4 +27,12 @@ export const requiredNameValidator = {
 
 export const requiredInfoValidator = {
   info: Joi.string().required()
+};
+
+export const requiredMoveIdValidator = {
+  moveId: Joi.number().required()
+};
+
+export const requiredWorkoutIdValidator = {
+  workoutId: Joi.number().required()
 };
