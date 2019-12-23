@@ -5,7 +5,8 @@ import {
   validate,
   requiredNameValidator,
   requiredInfoValidator,
-  requiredMoveIdArrayValidator
+  requiredMoveIdArrayValidator,
+  optionalInfoValidator
 } from "src/services/validate";
 import {
   getWorkoutsByUserId,
@@ -78,8 +79,6 @@ router.get("/", regularAuth, async (req: Request, res: Response) => {
 router.get("/:id", regularAuth, async (req: Request, res: Response) => {
   const { userId } = res.locals;
   const { id } = req.params;
-
-  console.log(userId, id);
 
   try {
     const workout = await getWorkoutById(userId, (id as unknown) as string);
@@ -227,7 +226,7 @@ router.put("/:id", regularAuth, async (req: Request, res: Response) => {
     const { value: move, error } = validate(
       {
         ...requiredNameValidator,
-        ...requiredInfoValidator
+        ...optionalInfoValidator
       },
       req.body
     );

@@ -61,7 +61,7 @@ export const getWorkoutExecutionById = async (
   ) as unknown) as IExtendedWorkoutExecution;
 
   const resultMoveExecution = await db.query(
-    `SELECT * FROM move_execution
+    `SELECT move.*, move_execution.* FROM move_execution
       LEFT JOIN move ON move.id = move_execution.move_id
     WHERE workout_execution_id = $1`,
     [id]
