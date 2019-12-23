@@ -1,5 +1,12 @@
 import { db } from "../shared/db";
-import { INewWorkout, IWorkout, INewMove, IMove } from "../types/interfaces";
+import {
+  INewWorkout,
+  IWorkout,
+  INewMove,
+  IMove,
+  IUpdateMoveExecution,
+  IUpdateWorkout
+} from "../types/interfaces";
 import camelcaseKeys = require("camelcase-keys");
 
 export const getWorkoutsByUserId = async (
@@ -20,8 +27,8 @@ export const getWorkoutsByUserId = async (
 };
 
 export const getWorkoutById = async (
-  userId: number,
-  workoutId: number
+  userId: string,
+  workoutId: string
 ): Promise<IWorkout | undefined> => {
   const workoutResult = await db.query(
     `SELECT * FROM workout WHERE id = $1 AND user_id = $2;`,
@@ -55,9 +62,9 @@ export const getWorkoutById = async (
 };
 
 export const createWorkout = async (
-  move: INewWorkout
+  params: INewWorkout
 ): Promise<IWorkout | undefined> => {
-  const { userId, name, info, moves } = move;
+  const { userId, name, info, moves } = params;
 
   const resultWorkout = await db.query(
     `
@@ -75,7 +82,7 @@ export const createWorkout = async (
       .map(move => `(${workout.id}, ${String(move)}, NOW())`)
       .join(",")};`;
 
-  const resultInsertMoves = await db.query(moveInsertQuery);
+  await db.query(moveInsertQuery);
 
   const resultMoves = await db.query(
     `
@@ -108,4 +115,24 @@ export const deleteWorkout = async (workoutId: number): Promise<void> => {
   if (result.rowCount === 0) {
     throw new Error("Invalid Workout ID");
   }
+};
+
+export const updateWorkout = async (
+  workoutId: string,
+  userId: string,
+  { name, info }: IUpdateWorkout
+): Promise<IWorkout | undefined> => {
+  await db.query(
+    `
+      UPDATE workout SET 
+        name = $1,
+        info = $2
+      WHERE id = $3;
+      `,
+    [name, info, workoutId]
+  );
+
+  const result = await getWorkoutById(userId, workoutId);
+
+  return result;
 };

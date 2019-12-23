@@ -8,91 +8,119 @@ import {
   requiredWorkoutIdValidator,
   requiredMoveIdValidator,
   requiredWorkoutExecutionIdValidator,
-  requiredInfoValidator,
   requiredRestingTimeValidator,
   requiredVibeValidator,
   requiredWeightValidator,
   requiredRepsValidator,
   requiredSetsValidator
 } from "../services/validate";
-import { createWorkoutExecution } from "../services/workoutExecutionService";
-import { createMoveExecution } from "src/services/moveExecutionService";
+import {
+  createWorkoutExecution,
+  getWorkoutExecutionsByWorkoutId,
+  deleteWorkoutExecutionById,
+  getWorkoutExecutionById
+} from "../services/workoutExecutionService";
+import {
+  createMoveExecution,
+  deleteMoveExecutionById,
+  updateMoveExecutionById
+} from "src/services/moveExecutionService";
 
 const router = Router();
 
 /******************************************************************************
- *                       Delete one - "DELETE /api/execution/workout/{id}"
+ *                       Delete one - "DELETE /api/execution/workout/{workoutExecutionId}"
  ******************************************************************************/
-/** @swagger
- *
- * /api/execution/workout/{workoutExecutionId}:
- *   delete:
- *     tags: [WorkoutExecution]
- *     description: Create new workout execution
- *     produces:
- *       - application/json
- *     parameters:
- *       - in: path
- *         name: workoutExecutionId
- *         description: Id of the workout execution to be deleted
- *         required: true
- *         type: number
- */
+router.delete(
+  "/workout/:workoutExecutionId",
+  regularAuth,
+  async (req: Request, res: Response) => {
+    const { workoutExecutionId } = req.params;
+    try {
+      if (!workoutExecutionId) {
+        return res.status(BAD_REQUEST).json({
+          error: "No workoutExecutionId!"
+        });
+      }
+
+      const result = await deleteWorkoutExecutionById(workoutExecutionId);
+
+      return res
+        .status(NO_CONTENT)
+        .json(result)
+        .end();
+    } catch (err) {
+      logger.error(err.message, err);
+      return res.status(BAD_REQUEST).json({
+        error: err.message
+      });
+    }
+  }
+);
 
 /******************************************************************************
  *        Get workout execution by id - "GET /api/execution/workout/{id}"
  ******************************************************************************/
-/** @swagger
- *
- * /api/execution/workout/{workoutExecutionId}:
- *   get:
- *     tags: [WorkoutExecution]
- *     description: Create new workout execution
- *     produces:
- *       - application/json
- *     parameters:
- *       - in: path
- *         name: workoutExecutionId
- *         description: Id of the workout execution
- *         required: true
- *         type: number
- */
+router.get(
+  "/workout/by-workout-id/:workoutId",
+  regularAuth,
+  async (req: Request, res: Response) => {
+    const { workoutId } = req.params;
+    try {
+      if (!workoutId) {
+        return res.status(BAD_REQUEST).json({
+          error: "No workout id!"
+        });
+      }
+
+      const result = await getWorkoutExecutionsByWorkoutId(workoutId);
+
+      return res
+        .status(OK)
+        .json(result)
+        .end();
+    } catch (err) {
+      logger.error(err.message, err);
+      return res.status(BAD_REQUEST).json({
+        error: err.message
+      });
+    }
+  }
+);
 
 /******************************************************************************
- *        Get workout executions - "GET /api/execution/workout"
+ *        Get workout execution by id - "GET /api/execution/workout/{id}"
  ******************************************************************************/
-/** @swagger
- *
- * /api/execution/workout/:
- *   get:
- *     tags: [WorkoutExecution]
- *     description: Create new workout execution
- *     produces:
- *       - application/json
- *     parameters:
- */
+router.get(
+  "/workout/:workoutExecutionId",
+  regularAuth,
+  async (req: Request, res: Response) => {
+    const { workoutExecutionId } = req.params;
+    try {
+      if (!workoutExecutionId) {
+        return res.status(BAD_REQUEST).json({
+          error: "No workout id!"
+        });
+      }
+
+      const result = await getWorkoutExecutionById(workoutExecutionId);
+
+      return res
+        .status(OK)
+        .json(result)
+        .end();
+    } catch (err) {
+      logger.error(err.message, err);
+      return res.status(BAD_REQUEST).json({
+        error: err.message
+      });
+    }
+  }
+);
 
 /******************************************************************************
  *                       Add One - "POST /api/execution/workout"
  ******************************************************************************/
-/** @swagger
- *
- * /api/execution/workout:
- *   post:
- *     tags: [WorkoutExecution]
- *     description: Create new workout execution
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: workoutId
- *         description: Id of the workout
- *         required: true
- *         type: string
- *       - name: info
- *         description: More info of the workout
- *         required: false
- *         type: string
- */
 router.post("/workout", regularAuth, async (req: Request, res: Response) => {
   try {
     const { value, error } = validate(
@@ -204,5 +232,130 @@ router.post("/move", regularAuth, async (req: Request, res: Response) => {
     });
   }
 });
+
+/******************************************************************************
+ *                       Update - "PUT /api/execution/move/{moveExecutionId}"
+ ******************************************************************************/
+/** @swagger
+ *
+ * /api/execution/move/{moveExecutionId}:
+ *   put:
+ *     tags: [MoveExecution]
+ *     description: Update move execution
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: workoutExecutionId
+ *         description: Id of the workout_execution entity
+ *         required: true
+ *         type: string
+ *       - name: workoutExecutionId
+ *         description: Id of the workout_execution entity
+ *         required: true
+ *         type: string
+ *       - name: move_id
+ *         description: Id of the move
+ *         required: true
+ *         type: string
+ *       - name: sets
+ *         description: Number of the sets
+ *         required: true
+ *         type: number
+ *       - name: reps
+ *         description: Number of the reps
+ *         required: true
+ *         type: number
+ *       - name: weight
+ *         description: Weight in kilograms
+ *         required: true
+ *         type: number
+ *       - name: vibe
+ *         description: Feeling described as number from 1 - 5
+ *         required: true
+ *         type: number
+ *       - name: resting_time
+ *         description: Resting time in minutes
+ *         required: true
+ *         type: number
+ *       - name: info
+ *         description: Info about the move execution
+ *         required: false
+ *         type: string
+ */
+router.put(
+  "/move/:moveExecutionId",
+  regularAuth,
+  async (req: Request, res: Response) => {
+    const { moveExecutionId } = req.params;
+    if (!moveExecutionId) {
+      return res.status(BAD_REQUEST).json({
+        error: "No moveExecutionId!"
+      });
+    }
+
+    try {
+      const { value, error } = validate(
+        {
+          ...requiredSetsValidator,
+          ...requiredRepsValidator,
+          ...requiredWeightValidator,
+          ...requiredVibeValidator,
+          ...requiredRestingTimeValidator,
+          ...optionalInfoValidator
+        },
+        req.body
+      );
+
+      if (error) {
+        return res.status(BAD_REQUEST).json({
+          error: error.message
+        });
+      }
+
+      const result = await updateMoveExecutionById(moveExecutionId, value);
+
+      return res
+        .status(CREATED)
+        .json(result)
+        .end();
+    } catch (err) {
+      logger.error(err.message, err);
+      return res.status(BAD_REQUEST).json({
+        error: err.message
+      });
+    }
+  }
+);
+
+/******************************************************************************
+ *         Delete one - "DELETE /api/execution/move/{workoutExecutionId}"
+ ******************************************************************************/
+router.delete(
+  "/move/:moveExecutionId",
+  regularAuth,
+  async (req: Request, res: Response) => {
+    const { moveExecutionId } = req.params;
+    try {
+      if (!moveExecutionId) {
+        return res.status(BAD_REQUEST).json({
+          error: "No moveExecutionId!"
+        });
+      }
+
+      const result = await deleteMoveExecutionById(moveExecutionId);
+
+      return res
+        .status(NO_CONTENT)
+        .json(result)
+        .end();
+    } catch (err) {
+      logger.error(err.message, err);
+      return res.status(BAD_REQUEST).json({
+        error: err.message
+      });
+    }
+  }
+);
 
 export default router;

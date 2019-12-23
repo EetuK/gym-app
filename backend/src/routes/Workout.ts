@@ -11,7 +11,8 @@ import {
   getWorkoutsByUserId,
   getWorkoutById,
   createWorkout,
-  deleteWorkout
+  deleteWorkout,
+  updateWorkout
 } from "src/services/workoutService";
 import { isUndefined } from "util";
 
@@ -81,7 +82,7 @@ router.get("/:id", regularAuth, async (req: Request, res: Response) => {
   console.log(userId, id);
 
   try {
-    const workout = await getWorkoutById(userId, (id as unknown) as number);
+    const workout = await getWorkoutById(userId, (id as unknown) as string);
 
     console.log(workout);
 
@@ -189,6 +190,61 @@ router.delete("/:id", regularAuth, async (req: Request, res: Response) => {
     await deleteWorkout((id as unknown) as number);
 
     return res.status(NO_CONTENT).end();
+  } catch (err) {
+    logger.error(err.message, err);
+    return res.status(BAD_REQUEST).json({
+      error: err.message
+    });
+  }
+});
+
+/******************************************************************************
+ *                       Update - "PUT /api/workout/{workoutId}"
+ ******************************************************************************/
+/** @swagger
+ *
+ * /api/workout/{id}:
+ *   post:
+ *     tags: [Workout]
+ *     description: Update workout
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: name
+ *         description: Name of the workout
+ *         required: true
+ *         type: string
+ *       - name: info
+ *         description: More info of the workout
+ *         required: true
+ *         type: string
+ */
+router.put("/:id", regularAuth, async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { userId } = res.locals;
+
+  try {
+    const { value: move, error } = validate(
+      {
+        ...requiredNameValidator,
+        ...requiredInfoValidator
+      },
+      req.body
+    );
+
+    if (error) {
+      return res.status(BAD_REQUEST).json({
+        error: error.message
+      });
+    }
+
+    const { name, info } = move;
+    const result = await updateWorkout(id, userId, { name, info });
+
+    return res
+      .status(CREATED)
+      .json(result)
+      .end();
   } catch (err) {
     logger.error(err.message, err);
     return res.status(BAD_REQUEST).json({

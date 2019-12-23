@@ -26,6 +26,11 @@ export interface IWorkout {
   createdAt: string;
 }
 
+export interface IUpdateWorkout {
+  name: string;
+  info: string;
+}
+
 export interface INewWorkout {
   userId: number;
   name: string;
@@ -72,6 +77,16 @@ export interface IWorkoutExecution {
   endedAt: string;
 }
 
+export interface IExtendedWorkoutExecution extends IWorkoutExecution {
+  executedMoves: IExtendedMoveExecution[];
+}
+
+export interface IExtendedMoveExecution extends IMoveExecution {
+  name: string;
+  info: string;
+  createdAt: string;
+}
+
 export interface INewMoveExecution {
   workoutExecutionId: string;
   moveId: string;
@@ -82,4 +97,25 @@ export interface INewMoveExecution {
   restingTime: number;
   info: string;
 }
-"";
+
+export interface IUpdateMoveExecution {
+  sets: number;
+  reps: number;
+  weight: number;
+  vibe: Vibe;
+  restingTime: number;
+  info: string;
+}
+
+export interface IMoveExecution {
+  id: string;
+  workoutExecutionId: string;
+  moveId: string;
+  sets: number;
+  reps: number;
+  weight: number;
+  vibe: Vibe;
+  restingTime: number;
+  info: string;
+  createdAt: string;
+}
