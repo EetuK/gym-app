@@ -1,6 +1,6 @@
-import { db } from "src/shared/db";
+import { db } from "../shared/db";
 import camelcaseKeys = require("camelcase-keys");
-import { IWorkoutMove, INewWorkoutMove, IMove } from "src/types/interfaces";
+import { IWorkoutMove, INewWorkoutMove, IMove } from "../types/interfaces";
 
 export const getWorkoutMoves = async (
   workoutId: number
@@ -44,7 +44,7 @@ export const deleteWorkoutMove = (
 ): Promise<undefined> => {
   return new Promise(async (resolve, reject) => {
     const result = await db.query(
-      `DELTE FROM workout_moves WHERE workout_id = $1 AND move_id = $2;`,
+      `DELETE FROM workout_moves WHERE workout_id = $1 AND move_id = $2;`,
       [workoutId, moveId]
     );
 

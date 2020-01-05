@@ -159,7 +159,9 @@ router.post("/login", async (req: Request, res: Response) => {
     const { key, options } = jwtCookieProps;
     res.cookie(key, jwt, options);
 
-    return res.status(OK).end();
+    const { passwordHash, ...userWithoutPassword } = user;
+
+    return res.json({ user: userWithoutPassword, jwt }).end();
   } catch (err) {
     logger.error(err.message, err);
     return res.status(BAD_REQUEST).json({

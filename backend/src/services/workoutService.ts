@@ -41,8 +41,6 @@ export const getWorkoutById = async (
 
   let workout = (camelcaseKeys(workoutResult.rows[0]) as unknown) as IWorkout;
 
-  console.log(workout);
-
   const moveResult = await db.query(
     `
   SELECT workout_moves.workout_id, move.* FROM workout_moves
@@ -51,12 +49,7 @@ export const getWorkoutById = async (
     [workoutId]
   );
 
-  console.log(moveResult);
-
   const moves = (camelcaseKeys(moveResult.rows) as unknown) as IMove[];
-
-  console.log(moves);
-
   workout.moves = moves;
   return workout;
 };
@@ -66,39 +59,54 @@ export const createWorkout = async (
 ): Promise<IWorkout | undefined> => {
   const { userId, name, info, moves } = params;
 
+  const editedInfo = info ? info : "";
+
   const resultWorkout = await db.query(
     `
     INSERT INTO workout (user_id, name, info, created_at)
     VALUES ($1, $2, $3, NOW()) RETURNING *;
   `,
-    [userId, name, info]
+    [userId, name, editedInfo]
   );
 
   let workout = (camelcaseKeys(resultWorkout.rows)[0] as unknown) as IWorkout;
 
-  const moveInsertQuery = `
+  if (moves.length > 0) {
+    const moveInsertQuery = `
     INSERT INTO workout_moves (workout_id, move_id, added_at) 
     VALUES ${moves
       .map(move => `(${workout.id}, ${String(move)}, NOW())`)
       .join(",")};`;
 
-  await db.query(moveInsertQuery);
+    await db.query(moveInsertQuery);
 
-  const resultMoves = await db.query(
-    `
+    const resultMoves = await db.query(
+      `
   SELECT workout_moves.workout_id, move.* FROM workout_moves
     LEFT JOIN move ON move.id = workout_moves.move_id
   WHERE workout_moves.workout_id = $1`,
-    [workout.id]
-  );
+      [workout.id]
+    );
 
-  workout.moves = (camelcaseKeys(resultMoves.rows) as unknown) as IMove[];
+    workout.moves = (camelcaseKeys(resultMoves.rows) as unknown) as IMove[];
+  } else {
+    workout.moves = [];
+  }
 
   return workout as IWorkout;
 };
 
 export const deleteWorkout = async (workoutId: number): Promise<void> => {
   let result = await db.query(
+    `
+    UPDATE workout_executions SET
+      workout_id = NULL
+    WHERE workout_id = $1;
+  `,
+    [workoutId]
+  );
+
+  result = await db.query(
     `
       DELETE FROM workout_moves WHERE workout_id = $1;
       `,

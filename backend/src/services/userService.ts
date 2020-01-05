@@ -33,3 +33,20 @@ export const getUserByEmail = async (
 
   return ret as IUser;
 };
+
+export const getUserById = async (id: string): Promise<IUser | undefined> => {
+  const result = await db.query(
+    `
+  SELECT id,firstname, lastname, email, role FROM user_account WHERE id = $1;
+  `,
+    [id]
+  );
+
+  if (result.rows.length === 0) {
+    return undefined;
+  }
+
+  const ret = camelCaseKeys(result.rows)[0] as unknown;
+
+  return ret as IUser;
+};

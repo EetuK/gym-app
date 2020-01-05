@@ -1,10 +1,10 @@
-import { db } from "src/shared/db";
+import { db } from "../shared/db";
 import camelcaseKeys = require("camelcase-keys");
 import {
   IWorkoutExecution,
   INewMoveExecution,
   IUpdateMoveExecution
-} from "src/types/interfaces";
+} from "../types/interfaces";
 
 export const createMoveExecution = async (
   params: INewMoveExecution

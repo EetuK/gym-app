@@ -1,18 +1,17 @@
 import { Request, Response, Router } from "express";
-import { regularAuth, logger } from "@shared";
+import { regularAuth, logger } from "../shared";
 import {
   getWorkoutMoves,
   deleteWorkoutMove,
   createWorkoutMove
-} from "src/services/workoutMoveService";
+} from "../services/workoutMoveService";
 import { OK, BAD_REQUEST, NO_CONTENT, CREATED } from "http-status-codes";
 import { isUndefined } from "util";
 import {
   requiredWorkoutIdValidator,
   requiredMoveIdValidator,
   validate
-} from "src/services/validate";
-import { createMove } from "src/services/moveService";
+} from "../services/validate";
 
 const router = Router();
 
@@ -129,7 +128,7 @@ router.post("/", regularAuth, async (req: Request, res: Response) => {
  */
 router.delete("/:id", regularAuth, async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { moveId } = req.body;
+  let moveId = req.query.moveId;
 
   try {
     await deleteWorkoutMove((id as unknown) as number, moveId);

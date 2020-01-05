@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "940a4ca4-6882-4b45-85f9-789e3d954b13",
+		"_postman_id": "12996197-d7aa-4326-8969-914f04c98d8a",
 		"name": "Gym App",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -22,7 +22,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"firstname\": \"Olli\",\n\t\"lastname\": \"Paasonen\",\n\t\"email\": \"olli.paasonen@tuni.fi\",\n\t\"password\": \"Salasana!\"\n}"
+							"raw": "{\n\t\"firstname\": \"Testi\",\n\t\"lastname\": \"Käyttäjä\",\n\t\"email\": \"testi.kayttaja@tuni.fi\",\n\t\"password\": \"salasana\"\n}"
 						},
 						"url": {
 							"raw": "localhost:9000/api/auth/register",
@@ -53,7 +53,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\": \"olli.paasonen@tuni.fi\",\n\t\"password\": \"Salasana!\"\n}"
+							"raw": "{\n\t\"email\": \"testi.kayttaja@tuni.fi\",\n\t\"password\": \"salasana\"\n}"
 						},
 						"url": {
 							"raw": "localhost:9000/api/auth/login",
@@ -76,20 +76,30 @@
 			"name": "Move",
 			"item": [
 				{
-					"name": "Get Move With ID",
+					"name": "Create Move",
 					"request": {
-						"method": "GET",
-						"header": [],
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Penkki\",\n\t\"info\": \"Vapaalla tangolla.\"\n}"
+						},
 						"url": {
-							"raw": "localhost:9000/api/move/7",
+							"raw": "localhost:9000/api/move",
 							"host": [
 								"localhost"
 							],
 							"port": "9000",
 							"path": [
 								"api",
-								"move",
-								"7"
+								"move"
 							]
 						}
 					},
@@ -122,30 +132,20 @@
 					"response": []
 				},
 				{
-					"name": "Create Move",
+					"name": "Get Move With ID",
 					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Pullup\",\n\t\"info\": \"Just a basic pullup\"\n}"
-						},
+						"method": "GET",
+						"header": [],
 						"url": {
-							"raw": "localhost:9000/api/move",
+							"raw": "localhost:9000/api/move/1",
 							"host": [
 								"localhost"
 							],
 							"port": "9000",
 							"path": [
 								"api",
-								"move"
+								"move",
+								"1"
 							]
 						}
 					},
@@ -165,17 +165,18 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"id\": 6\n}"
+							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:9000/api/move",
+							"raw": "localhost:9000/api/move/2",
 							"host": [
 								"localhost"
 							],
 							"port": "9000",
 							"path": [
 								"api",
-								"move"
+								"move",
+								"2"
 							]
 						}
 					},
@@ -186,26 +187,6 @@
 		{
 			"name": "Workout",
 			"item": [
-				{
-					"name": "Delete Workout",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "localhost:9000/api/workout/1",
-							"host": [
-								"localhost"
-							],
-							"port": "9000",
-							"path": [
-								"api",
-								"workout",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "Create Workout",
 					"request": {
@@ -220,7 +201,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Basic\",\n\t\"info\": \"Just a basic workout!\"\n}"
+							"raw": "{\n\t\"name\": \"Penkkitreeni\",\n\t\"info\": \"Yhden liikkeen penkkitreeni\",\n\t\"moves\": [\"1\"]\n}"
 						},
 						"url": {
 							"raw": "localhost:9000/api/workout/",
@@ -232,6 +213,25 @@
 								"api",
 								"workout",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Workouts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/api/workout",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"workout"
 							]
 						}
 					},
@@ -265,44 +265,30 @@
 					"response": []
 				},
 				{
-					"name": "Get Workouts",
+					"name": "Update workout information",
 					"request": {
-						"method": "GET",
-						"header": [],
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Mave\"\n}"
+						},
 						"url": {
-							"raw": "localhost:9000/api/workout",
+							"raw": "localhost:9000/api/workout/2",
 							"host": [
 								"localhost"
 							],
 							"port": "9000",
 							"path": [
 								"api",
-								"workout"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "Workout Move",
-			"item": [
-				{
-					"name": "Get Moves Of A Workout",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:9000/api/workoutmove/2",
-							"host": [
-								"localhost"
-							],
-							"port": "9000",
-							"path": [
-								"api",
-								"workoutmove",
+								"workout",
 								"2"
 							]
 						}
@@ -310,7 +296,32 @@
 					"response": []
 				},
 				{
-					"name": "Create A Workout Move",
+					"name": "Delete Workout",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/api/workout/7",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"workout",
+								"7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Execution",
+			"item": [
+				{
+					"name": "Create workout execution",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -323,31 +334,27 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"workoutId\": 2,\n\t\"moveId\": 7\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							"raw": "{\n\t\"workoutId\": \"8\"\n}"
 						},
 						"url": {
-							"raw": "localhost:9000/api/workoutmove",
+							"raw": "localhost:9000/api/execution/workout",
 							"host": [
 								"localhost"
 							],
 							"port": "9000",
 							"path": [
 								"api",
-								"workoutmove"
+								"execution",
+								"workout"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete A Workout Move",
+					"name": "Create move execution",
 					"request": {
-						"method": "DELETE",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -358,30 +365,141 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"moveId\": 7\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							"raw": "{\n\t\"workoutExecutionId\": \"3\",\n\t\"moveId\": \"4\",\n\t\"sets\": 3,\n\t\"reps\": 15,\n\t\"weight\": 50,\n\t\"vibe\": 3,\n\t\"restingTime\": 2,\n\t\"info\": \"Infoa suorituksesta\"\n}"
 						},
 						"url": {
-							"raw": "localhost:9000/api/workoutmove/2",
+							"raw": "localhost:9000/api/execution/move",
 							"host": [
 								"localhost"
 							],
 							"port": "9000",
 							"path": [
 								"api",
-								"workoutmove",
+								"execution",
+								"move"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get workout executions by workout id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/api/execution/workout/by-workout-id/8",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"execution",
+								"workout",
+								"by-workout-id",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get workout execution by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/api/execution/workout/3",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"execution",
+								"workout",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update move execution",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"sets\": 3,\n\t\"reps\": 15,\n\t\"weight\": 50,\n\t\"vibe\": 3,\n\t\"restingTime\": 2,\n\t\"info\": \"Infoa suorituksesta 2\"\n}"
+						},
+						"url": {
+							"raw": "localhost:9000/api/execution/move/2",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"execution",
+								"move",
 								"2"
 							]
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Delete workout execution and executed moves",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/api/execution/workout/2",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"execution",
+								"workout",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete move execution",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/api/execution/move/3",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"execution",
+								"move",
+								"3"
+							]
+						}
+					},
+					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		}
 	]
 }

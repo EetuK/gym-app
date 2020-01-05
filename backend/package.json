@@ -5,18 +5,22 @@
     "lint": "tslint --project \"tsconfig.json\"",
     "start": "cross-env ENV_FILE=production node -r ./env",
     "dev": "nodemon --config \"./util/nodemon.json\"",
-    "test": "nodemon --config \"./util/nodemon.test.json\""
+    "test": "nodemon --config \"./util/nodemon.test.json\"",
+    "prod": "ts-node ./src/start.ts"
   },
   "dependencies": {
     "@hapi/joi": "^16.1.8",
+    "@types/cors": "^2.8.6",
     "@types/swagger-jsdoc": "^3.0.2",
     "@types/swagger-ui-express": "^4.1.0",
     "bcryptjs": "^2.4.3",
     "camelcase-keys": "^6.1.1",
     "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
     "cross-env": "^6.0.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "http-proxy-middleware": "^0.20.0",
     "http-status-codes": "^1.4.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",

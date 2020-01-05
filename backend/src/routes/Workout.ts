@@ -7,14 +7,14 @@ import {
   requiredInfoValidator,
   requiredMoveIdArrayValidator,
   optionalInfoValidator
-} from "src/services/validate";
+} from "../services/validate";
 import {
   getWorkoutsByUserId,
   getWorkoutById,
   createWorkout,
   deleteWorkout,
   updateWorkout
-} from "src/services/workoutService";
+} from "../services/workoutService";
 import { isUndefined } from "util";
 
 // Init shared
@@ -83,8 +83,6 @@ router.get("/:id", regularAuth, async (req: Request, res: Response) => {
   try {
     const workout = await getWorkoutById(userId, (id as unknown) as string);
 
-    console.log(workout);
-
     if (isUndefined(workout)) {
       return res
         .status(NO_CONTENT)
@@ -137,7 +135,7 @@ router.post("/", regularAuth, async (req: Request, res: Response) => {
     const { value: move, error } = validate(
       {
         ...requiredNameValidator,
-        ...requiredInfoValidator,
+        ...optionalInfoValidator,
         ...requiredMoveIdArrayValidator
       },
       req.body
