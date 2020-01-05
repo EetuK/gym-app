@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "lint": "tslint --project \"tsconfig.json\"",
-    "start": "cross-env ENV_FILE=production node -r ./env",
+    "prod": "cross-env ENV_FILE=production node -r ./env",
     "dev": "nodemon --config \"./util/nodemon.json\"",
     "test": "nodemon --config \"./util/nodemon.test.json\"",
-    "prod": "ts-node ./src/start.ts"
+    "start": "ts-node ./src/start.ts"
   },
   "dependencies": {
     "@hapi/joi": "^16.1.8",
