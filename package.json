@@ -7,7 +7,7 @@
     "prod": "cross-env ENV_FILE=production node -r ./env",
     "dev": "nodemon --config \"./util/nodemon.json\"",
     "test": "nodemon --config \"./util/nodemon.test.json\"",
-    "start": "npm run serve",
+    "start": "ts-node ./src/start.ts",
     "serve": "node dist/start.js",
     "build-ts": "tsc",
     "postinstall": "npm run build-ts"
