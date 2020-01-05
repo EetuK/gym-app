@@ -4,13 +4,15 @@ import { logger, adminAuth, regularAuth } from "../shared";
 import {
   validate,
   requiredNameValidator,
-  requiredInfoValidator
+  requiredInfoValidator,
+  optionalInfoValidator
 } from "../services/validate";
 import {
   createMove,
   getMovesByUserId,
   deleteMove,
-  getMoveById
+  getMoveById,
+  updateMove
 } from "../services/moveService";
 import { isUndefined } from "util";
 
@@ -119,7 +121,7 @@ router.post("/", regularAuth, async (req: Request, res: Response) => {
     const { value: move, error } = validate(
       {
         ...requiredNameValidator,
-        ...requiredInfoValidator
+        ...optionalInfoValidator
       },
       req.body
     );
@@ -170,6 +172,44 @@ router.delete("/:id", regularAuth, async (req: Request, res: Response) => {
     await deleteMove((id as unknown) as number);
 
     return res.status(NO_CONTENT).end();
+  } catch (err) {
+    logger.error(err.message, err);
+    return res.status(BAD_REQUEST).json({
+      error: err.message
+    });
+  }
+});
+
+/******************************************************************************
+ *                       Update One - "PUT /api/move/{id}"
+ ******************************************************************************/
+router.put("/:id", regularAuth, async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const { value: move, error } = validate(
+      {
+        ...requiredNameValidator,
+        ...optionalInfoValidator
+      },
+      req.body
+    );
+
+    if (error) {
+      console.log(error.message);
+      return res.status(BAD_REQUEST).json({
+        error: error.message
+      });
+    }
+
+    const { name, info } = move;
+
+    const resultMove = await updateMove(String(id), name, info);
+
+    return res
+      .status(OK)
+      .json(resultMove)
+      .end();
   } catch (err) {
     logger.error(err.message, err);
     return res.status(BAD_REQUEST).json({

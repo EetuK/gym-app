@@ -5,6 +5,7 @@ import BaseRouter from "./routes";
 import { initDb } from "./shared/db";
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
+import cors from "cors";
 
 const options = {
   definition: {
@@ -32,6 +33,12 @@ const app = express();
 initDb();
 
 // Add middleware/settings/routes to express.
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true
+  })
+);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

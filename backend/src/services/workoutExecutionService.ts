@@ -1,11 +1,11 @@
-import { db } from "src/shared/db";
+import { db } from "../shared/db";
 import camelcaseKeys = require("camelcase-keys");
 import {
   IWorkoutExecution,
   INewWorkoutExecution,
   IExtendedWorkoutExecution,
   IExtendedMoveExecution
-} from "src/types/interfaces";
+} from "../types/interfaces";
 
 export const createWorkoutExecution = async ({
   workoutId,
@@ -30,7 +30,7 @@ export const getWorkoutExecutionsByWorkoutId = async (
   workoutId: string
 ): Promise<IWorkoutExecution[] | undefined> => {
   const result = await db.query(
-    `SELECT * FROM workout_executions WHERE workout_id = $1`,
+    `SELECT * FROM workout_executions WHERE workout_id = $1;`,
     [workoutId]
   );
 

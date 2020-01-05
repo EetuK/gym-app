@@ -3,7 +3,7 @@ import { UNAUTHORIZED } from "http-status-codes";
 import { logger } from "./Logger";
 import { jwtCookieProps } from "./cookies";
 import { JwtService } from "./JwtService";
-import { Role } from "src/types/enums";
+import { Role } from "../types/enums";
 
 // Init shared
 const jwtService = new JwtService();
@@ -32,6 +32,7 @@ export const adminAuth = async (
   try {
     // Get json-web-token
     const jwt = req.signedCookies[jwtCookieProps.key];
+    //const jwt = req.headers["authorization"];
     if (!jwt) {
       throw Error("JWT not present in signed cookie.");
     }
@@ -59,6 +60,7 @@ export const regularAuth = async (
   try {
     // Get json-web-token
     const jwt = req.signedCookies[jwtCookieProps.key];
+    //const jwt = req.headers["authorization"];
     if (!jwt) {
       throw Error("JWT not present in signed cookie.");
     }

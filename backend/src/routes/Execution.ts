@@ -24,7 +24,7 @@ import {
   createMoveExecution,
   deleteMoveExecutionById,
   updateMoveExecutionById
-} from "src/services/moveExecutionService";
+} from "../services/moveExecutionService";
 
 const router = Router();
 

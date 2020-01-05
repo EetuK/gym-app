@@ -1,6 +1,7 @@
 import { INewMove, IMove } from "../types/interfaces";
 import { db } from "../shared/db";
 import camelCaseKeys from "camelcase-keys";
+import camelcaseKeys from "camelcase-keys";
 
 export const getMovesByUserId = async (
   userId: number
@@ -45,13 +46,15 @@ export const createMove = async (
 ): Promise<IMove | undefined> => {
   const { userId, name, info } = move;
 
+  const editedInfo = info ? info : "";
+
   const result = await db.query(
     `
     INSERT INTO move (user_id, name, info, created_at)
     VALUES ($1, $2, $3,  NOW())
     RETURNING *;
   `,
-    [userId, name, info]
+    [userId, name, editedInfo]
   );
 
   if (result.rowCount === 0) {
@@ -73,4 +76,27 @@ export const deleteMove = (moveId: number): Promise<undefined> => {
 
     resolve();
   });
+};
+
+export const updateMove = async (
+  moveId: string,
+  name: string,
+  info?: string
+): Promise<IMove | undefined> => {
+  const moveInfo = info ? info : "";
+
+  const result = await db.query(
+    `
+    UPDATE move SET
+      name = $1,
+      info = $2
+    WHERE id = $3 RETURNING *;`,
+    [name, moveInfo, moveId]
+  );
+
+  if (result.rows.length === 0) {
+    return undefined;
+  }
+
+  const move = (camelcaseKeys(result.rows) as unknown) as IMove;
 };
