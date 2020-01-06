@@ -35,7 +35,9 @@ initDb();
 // Add middleware/settings/routes to express.
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.FRONTEND_HOST
+      ? process.env.FRONTEND_HOST
+      : "http://localhost:3000",
     credentials: true
   })
 );

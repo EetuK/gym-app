@@ -137,7 +137,7 @@ export const updateWorkout = async (
         info = $2
       WHERE id = $3;
       `,
-    [name, info ? info : "", workoutId]
+    [name, info ? info : " ", workoutId]
   );
 
   const result = await getWorkoutById(userId, workoutId);
